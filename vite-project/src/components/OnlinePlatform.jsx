@@ -3,7 +3,7 @@ import axios from "axios";
 import Web3 from "web3";
 import contractABI from "../Json/Digital_identity.json";
 
-const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7"; // Replace with actual contract address
+const contractAddress = "0x86ab9f453215774E50FcE92d1fe3e30Bb0B123E9"; // Replace with actual contract address
 
 const OnlinePlatform = ({ account }) => {
     const [contract, setContract] = useState(null);

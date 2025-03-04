@@ -7,7 +7,7 @@ import contractABI from "../Json/Digital_identity.json";
 console.log("🔍 API Key:", import.meta.env.VITE_PINATA_API_KEY);
 console.log("🔍 Secret Key:", import.meta.env.VITE_PINATA_SECRET_KEY);
 
-const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7"; // Replace with actual contract address
+const contractAddress = "0x86ab9f453215774E50FcE92d1fe3e30Bb0B123E9"; // Replace with actual contract address
 
 const College = ({ account }) => {
     const [contract, setContract] = useState(null);

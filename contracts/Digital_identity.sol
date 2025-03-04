@@ -81,8 +81,9 @@ contract Digital_identity {
     }
 
     // Function for students to add certificates
-    function addCertificateForStudent(string memory certificateHash, address educational_institution) external {
+     function addCertificateForStudent(string memory certificateHash, address educational_institution) external {
         require(students[msg.sender][educational_institution] == true, "COLLEGE OR ONLINE PLATFORM DOES NOT EXIST");
+         require(certificate[educational_institution][msg.sender][certificateHash] == true, "THE CERTIFICATE DOES NOT EXIST");
         student_certificate[msg.sender][educational_institution][certificateHash] = true;
         emit CertificateForStudentAdded(msg.sender, educational_institution, certificateHash);
     }
