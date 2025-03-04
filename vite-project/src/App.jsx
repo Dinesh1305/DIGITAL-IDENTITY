@@ -9,6 +9,7 @@ import Admin from "./components/Admin";
 import College from "./components/College";
 import OnlinePlatform from "./components/OnlinePlatform";
 import Student from "./components/Student";
+import Company from "./components/Company";
 
 function App() {
   const [state, setState] = useState({
@@ -21,7 +22,7 @@ function App() {
   useEffect(() => {
     const connectWallet = async () => {
       try {
-        if (typeof window.ethereum === "undefined") {
+        if (!window.ethereum) {
           alert("Please install MetaMask to use this application.");
           return;
         }
@@ -65,6 +66,7 @@ function App() {
           <Link to="/college"><button>🏫 College</button></Link>
           <Link to="/online-platform"><button>🌐 Online Platform</button></Link>
           <Link to="/student"><button>🎓 Student</button></Link>
+          <Link to="/company"><button>🏢 Company</button></Link>
         </nav>
 
         <Routes>
@@ -72,6 +74,7 @@ function App() {
           <Route path="/college" element={<College contract={state.contract} account={state.account} />} />
           <Route path="/online-platform" element={<OnlinePlatform contract={state.contract} account={state.account} />} />
           <Route path="/student" element={<Student contract={state.contract} account={state.account} />} />
+          <Route path="/company" element={<Company contract={state.contract} account={state.account} />} />
         </Routes>
       </div>
     </Router>
