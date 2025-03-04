@@ -2,5 +2,9 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "hardhat": "^2.22.19"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "react-router-dom": "^7.2.0"
   }
 }
