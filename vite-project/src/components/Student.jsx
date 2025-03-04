@@ -1,106 +1,145 @@
-import React, { useState } from "react";
-import { ethers } from "ethers";
-import contractABI from "../Json/Digital_identity.json"; 
+import React, { useState, useEffect } from "react";
+import Web3 from "web3";
+import contractABI from "../Json/Digital_identity.json"; // Ensure correct path
 
+const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7"; // Replace with actual contract address
 
-
-const Student = ({ contractAddress }) => {
+const Student = ({ account }) => {
+    const [contract, setContract] = useState(null);
     const [certificateHash, setCertificateHash] = useState("");
     const [institutionAddress, setInstitutionAddress] = useState("");
     const [viewerAddress, setViewerAddress] = useState("");
     const [hasAccess, setHasAccess] = useState(null);
+    const [loading, setLoading] = useState(false);
 
+    // Initialize Web3 and contract instance
+    useEffect(() => {
+        const loadBlockchainData = async () => {
+            try {
+                const web3 = new Web3(window.ethereum);
+                const deployedContract = new web3.eth.Contract(contractABI.abi, contractAddress);
+                setContract(deployedContract);
+
+                console.log("🟢 Contract Address:", deployedContract.options.address);
+                console.log("🟢 Available Methods:", Object.keys(deployedContract.methods));
+            } catch (error) {
+                console.error("🔴 Error loading contract:", error);
+            }
+        };
+
+        loadBlockchainData();
+    }, []);
+
+    // Add Certificate for Student
     const addCertificateForStudent = async () => {
-        if (!window.ethereum) {
-            alert("Please install MetaMask!");
+        if (!contract) {
+            alert("❌ Contract not connected!");
+            return;
+        }
+        if (!contract.methods?.addCertificateForStudent) {
+            alert("❌ addCertificateForStudent method not found!");
             return;
         }
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
         try {
-            const tx = await contract.addCertificateForStudent(certificateHash, institutionAddress);
-            await tx.wait();
-            alert("Certificate added successfully!");
+            console.log("📌 Adding certificate:", certificateHash);
+            setLoading(true);
+            await contract.methods.addCertificateForStudent(certificateHash, institutionAddress).send({ from: account });
+            alert("✅ Certificate added successfully!");
             setCertificateHash("");
             setInstitutionAddress("");
         } catch (error) {
-            console.error(error);
-            alert("Failed to add certificate");
+            console.error("🔴 Error adding certificate:", error);
+            alert("Error: " + error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
+    // Remove Certificate
     const removeCertificate = async () => {
-        if (!window.ethereum) {
-            alert("Please install MetaMask!");
+        if (!contract) {
+            alert("❌ Contract not connected!");
+            return;
+        }
+        if (!contract.methods?.removeCertificate) {
+            alert("❌ removeCertificate method not found!");
             return;
         }
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
         try {
-            const tx = await contract.removeCertificate(institutionAddress, certificateHash);
-            await tx.wait();
-            alert("Certificate removed successfully!");
+            console.log("📌 Removing certificate:", certificateHash);
+            setLoading(true);
+            await contract.methods.removeCertificate(institutionAddress, certificateHash).send({ from: account });
+            alert("✅ Certificate removed successfully!");
             setCertificateHash("");
             setInstitutionAddress("");
         } catch (error) {
-            console.error(error);
-            alert("Failed to remove certificate");
+            console.error("🔴 Error removing certificate:", error);
+            alert("Error: " + error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
+    // Grant Certificate Access
     const grantCertificateAccess = async () => {
-        if (!window.ethereum) {
-            alert("Please install MetaMask!");
+        if (!contract) {
+            alert("❌ Contract not connected!");
+            return;
+        }
+        if (!contract.methods?.grantCertificateAccess) {
+            alert("❌ grantCertificateAccess method not found!");
             return;
         }
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
         try {
-            const tx = await contract.grantCertificateAccess(viewerAddress, institutionAddress, certificateHash);
-            await tx.wait();
-            alert("Access granted successfully!");
+            console.log("📌 Granting access to:", viewerAddress);
+            setLoading(true);
+            await contract.methods.grantCertificateAccess(viewerAddress, institutionAddress, certificateHash).send({ from: account });
+            alert("✅ Access granted successfully!");
             setViewerAddress("");
             setInstitutionAddress("");
             setCertificateHash("");
         } catch (error) {
-            console.error(error);
-            alert("Failed to grant access");
+            console.error("🔴 Error granting access:", error);
+            alert("Error: " + error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
+    // Check Certificate Access
     const checkCertificateAccess = async () => {
-        if (!window.ethereum) {
-            alert("Please install MetaMask!");
+        if (!contract) {
+            alert("❌ Contract not connected!");
+            return;
+        }
+        if (!contract.methods?.canViewCertificate) {
+            alert("❌ canViewCertificate method not found!");
             return;
         }
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const contract = new ethers.Contract(contractAddress, contractABI, provider);
-
         try {
-            const result = await contract.canViewCertificate(viewerAddress, institutionAddress, certificateHash);
+            console.log("📌 Checking access for:", viewerAddress);
+            setLoading(true);
+            const result = await contract.methods.canViewCertificate(viewerAddress, institutionAddress, certificateHash).call();
             setHasAccess(result);
         } catch (error) {
-            console.error(error);
-            alert("Failed to check access");
+            console.error("🔴 Error checking access:", error);
+            alert("Error: " + error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div>
-            <h2>Student Panel</h2>
+        <div className="p-4">
+            <h2 className="text-lg font-bold">🎓 Student Panel</h2>
 
-            <div>
-                <h3>Add Certificate</h3>
+            {/* Add Certificate Section */}
+            <div className="input-group">
+                <h3>📜 Add Certificate</h3>
                 <input
                     type="text"
                     placeholder="Enter Certificate Hash"
@@ -113,11 +152,14 @@ const Student = ({ contractAddress }) => {
                     value={institutionAddress}
                     onChange={(e) => setInstitutionAddress(e.target.value)}
                 />
-                <button onClick={addCertificateForStudent}>Add Certificate</button>
+                <button onClick={addCertificateForStudent} disabled={loading}>
+                    {loading ? "Processing..." : "➕ Add Certificate"}
+                </button>
             </div>
 
-            <div>
-                <h3>Remove Certificate</h3>
+            {/* Remove Certificate Section */}
+            <div className="input-group">
+                <h3>🗑 Remove Certificate</h3>
                 <input
                     type="text"
                     placeholder="Enter Certificate Hash"
@@ -130,11 +172,14 @@ const Student = ({ contractAddress }) => {
                     value={institutionAddress}
                     onChange={(e) => setInstitutionAddress(e.target.value)}
                 />
-                <button onClick={removeCertificate}>Remove Certificate</button>
+                <button onClick={removeCertificate} disabled={loading}>
+                    {loading ? "Processing..." : "🗑 Remove Certificate"}
+                </button>
             </div>
 
-            <div>
-                <h3>Grant Certificate Access</h3>
+            {/* Grant Certificate Access Section */}
+            <div className="input-group">
+                <h3>🔓 Grant Certificate Access</h3>
                 <input
                     type="text"
                     placeholder="Enter Viewer Address"
@@ -153,11 +198,14 @@ const Student = ({ contractAddress }) => {
                     value={certificateHash}
                     onChange={(e) => setCertificateHash(e.target.value)}
                 />
-                <button onClick={grantCertificateAccess}>Grant Access</button>
+                <button onClick={grantCertificateAccess} disabled={loading}>
+                    {loading ? "Processing..." : "🔓 Grant Access"}
+                </button>
             </div>
 
-            <div>
-                <h3>Check Certificate Access</h3>
+            {/* Check Certificate Access Section */}
+            <div className="input-group">
+                <h3>🔍 Check Certificate Access</h3>
                 <input
                     type="text"
                     placeholder="Enter Viewer Address"
@@ -176,9 +224,11 @@ const Student = ({ contractAddress }) => {
                     value={certificateHash}
                     onChange={(e) => setCertificateHash(e.target.value)}
                 />
-                <button onClick={checkCertificateAccess}>Check Access</button>
+                <button onClick={checkCertificateAccess} disabled={loading}>
+                    {loading ? "Checking..." : "🔍 Check Access"}
+                </button>
                 {hasAccess !== null && (
-                    <p>Access Status: {hasAccess ? "Granted" : "Not Granted"}</p>
+                    <p>🔹 Access Status: {hasAccess ? "✅ Granted" : "❌ Not Granted"}</p>
                 )}
             </div>
         </div>
