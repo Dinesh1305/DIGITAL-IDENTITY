@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Web3 from "web3";
-import abi from "../Json/Digital_identity.json"; // Ensure correct path
+import abi from "../Json/Digital_identity.json"; // Ensure correct ABI path
 
-const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7"; // Replace with actual contract address
+const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7"; // Replace with actual address
 
 const Admin = ({ account }) => {
   const [contract, setContract] = useState(null);
@@ -10,7 +10,7 @@ const Admin = ({ account }) => {
   const [onlinePlatformAddress, setOnlinePlatformAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Initialize Web3 and contract instance
+  // Initialize Web3 and Contract
   useEffect(() => {
     const loadBlockchainData = async () => {
       try {
@@ -18,7 +18,7 @@ const Admin = ({ account }) => {
         const deployedContract = new web3.eth.Contract(abi.abi, contractAddress);
         setContract(deployedContract);
         
-        console.log("🟢 Contract Address:", deployedContract.options.address);
+        console.log("🟢 Contract Loaded:", deployedContract.options.address);
         console.log("🟢 Available Methods:", Object.keys(deployedContract.methods));
       } catch (error) {
         console.error("🔴 Error loading contract:", error);
@@ -28,50 +28,30 @@ const Admin = ({ account }) => {
     loadBlockchainData();
   }, []);
 
-  // Add College Function
-  const addCollege = async () => {
+  // Helper Function to Handle Transactions
+  const sendTransaction = async (method, params) => {
     if (!contract) {
       alert("Contract not connected!");
       return;
     }
-    if (!contract.methods?.addCollege) {
-      alert("addCollege method not found!");
+    if (!contract.methods[method]) {
+      alert(`🔴 Method '${method}' not found in contract!`);
       return;
     }
 
     try {
-      console.log("🟢 Adding college:", collegeAddress);
+      console.log(`🟢 Sending Transaction: ${method}`, params);
       setLoading(true);
-      await contract.methods.addCollege(collegeAddress).send({ from: account });
-      alert("✅ College added successfully!");
-      setCollegeAddress("");
-    } catch (error) {
-      console.error("🔴 Error adding college:", error);
-      alert("Error: " + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  // Add Online Platform Function
-  const addOnlinePlatform = async () => {
-    if (!contract) {
-      alert("Contract not connected!");
-      return;
-    }
-    if (!contract.methods?.addOnlinePlatform) {
-      alert("addOnlinePlatform method not found!");
-      return;
-    }
+      const tx = await contract.methods[method](...params).send({ from: account });
 
-    try {
-      console.log("🟢 Adding online platform:", onlinePlatformAddress);
-      setLoading(true);
-      await contract.methods.addOnlinePlatform(onlinePlatformAddress).send({ from: account });
-      alert("✅ Online Platform added successfully!");
-      setOnlinePlatformAddress("");
+      console.log("✅ Transaction Sent:", tx.transactionHash);
+      alert(`✅ Transaction Successful! \nView on Etherscan: ${tx.transactionHash}`);
+
+      // Open Etherscan link automatically
+      window.open(`https://sepolia.etherscan.io/tx/${tx.transactionHash}`, "_blank");
     } catch (error) {
-      console.error("🔴 Error adding online platform:", error);
+      console.error(`🔴 Error in ${method}:`, error);
       alert("Error: " + error.message);
     } finally {
       setLoading(false);
@@ -91,7 +71,7 @@ const Admin = ({ account }) => {
           value={collegeAddress}
           onChange={(e) => setCollegeAddress(e.target.value)}
         />
-        <button onClick={addCollege} disabled={loading}>
+        <button onClick={() => sendTransaction("addCollege", [collegeAddress])} disabled={loading}>
           {loading ? "Adding..." : "Add College"}
         </button>
       </div>
@@ -105,7 +85,7 @@ const Admin = ({ account }) => {
           value={onlinePlatformAddress}
           onChange={(e) => setOnlinePlatformAddress(e.target.value)}
         />
-        <button onClick={addOnlinePlatform} disabled={loading}>
+        <button onClick={() => sendTransaction("addOnlinePlatform", [onlinePlatformAddress])} disabled={loading}>
           {loading ? "Adding..." : "Add Online Platform"}
         </button>
       </div>
