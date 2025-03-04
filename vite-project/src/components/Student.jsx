@@ -6,130 +6,108 @@ const contractAddress = "0x86ab9f453215774E50FcE92d1fe3e30Bb0B123E9"; // Replace
 
 const Student = ({ account }) => {
     const [contract, setContract] = useState(null);
-    const [certificateHash, setCertificateHash] = useState("");
-    const [institutionAddress, setInstitutionAddress] = useState("");
-    const [viewerAddress, setViewerAddress] = useState("");
-    const [hasAccess, setHasAccess] = useState(null);
-    const [loading, setLoading] = useState(false);
 
-    // Initialize Web3 and contract instance
+    // Separate state variables for each section
+    const [addCertificateHash, setAddCertificateHash] = useState("");
+    const [addInstitutionAddress, setAddInstitutionAddress] = useState("");
+
+    const [removeCertificateHash, setRemoveCertificateHash] = useState("");
+    const [removeInstitutionAddress, setRemoveInstitutionAddress] = useState("");
+
+    const [grantCertificateHash, setGrantCertificateHash] = useState("");
+    const [grantInstitutionAddress, setGrantInstitutionAddress] = useState("");
+    const [grantViewerAddress, setGrantViewerAddress] = useState("");
+
+    const [checkCertificateHash, setCheckCertificateHash] = useState("");
+    const [checkInstitutionAddress, setCheckInstitutionAddress] = useState("");
+    const [checkViewerAddress, setCheckViewerAddress] = useState("");
+
+    const [hasAccess, setHasAccess] = useState(null);
+
+    // Separate loading states for each button
+    const [loadingAdd, setLoadingAdd] = useState(false);
+    const [loadingRemove, setLoadingRemove] = useState(false);
+    const [loadingGrant, setLoadingGrant] = useState(false);
+    const [loadingCheck, setLoadingCheck] = useState(false);
+
     useEffect(() => {
         const loadBlockchainData = async () => {
             try {
                 const web3 = new Web3(window.ethereum);
                 const deployedContract = new web3.eth.Contract(contractABI.abi, contractAddress);
                 setContract(deployedContract);
-
-                console.log("🟢 Contract Address:", deployedContract.options.address);
-                console.log("🟢 Available Methods:", Object.keys(deployedContract.methods));
             } catch (error) {
-                console.error("🔴 Error loading contract:", error);
+                console.error("Error loading contract:", error);
             }
         };
 
         loadBlockchainData();
     }, []);
 
-    // Add Certificate for Student
+    // Add Certificate
     const addCertificateForStudent = async () => {
-        if (!contract) {
-            alert("❌ Contract not connected!");
-            return;
-        }
-        if (!contract.methods?.addCertificateForStudent) {
-            alert("❌ addCertificateForStudent method not found!");
-            return;
-        }
+        if (!contract) return alert("Contract not connected!");
 
         try {
-            console.log("📌 Adding certificate:", certificateHash);
-            setLoading(true);
-            await contract.methods.addCertificateForStudent(certificateHash, institutionAddress).send({ from: account });
-            alert("✅ Certificate added successfully!");
-            setCertificateHash("");
-            setInstitutionAddress("");
+            setLoadingAdd(true);
+            await contract.methods.addCertificateForStudent(addCertificateHash, addInstitutionAddress).send({ from: account });
+            alert("Certificate added successfully!");
+            setAddCertificateHash("");
+            setAddInstitutionAddress("");
         } catch (error) {
-            console.error("🔴 Error adding certificate:", error);
             alert("Error: " + error.message);
         } finally {
-            setLoading(false);
+            setLoadingAdd(false);
         }
     };
 
     // Remove Certificate
     const removeCertificate = async () => {
-        if (!contract) {
-            alert("❌ Contract not connected!");
-            return;
-        }
-        if (!contract.methods?.removeCertificate) {
-            alert("❌ removeCertificate method not found!");
-            return;
-        }
+        if (!contract) return alert("Contract not connected!");
 
         try {
-            console.log("📌 Removing certificate:", certificateHash);
-            setLoading(true);
-            await contract.methods.removeCertificate(institutionAddress, certificateHash).send({ from: account });
-            alert("✅ Certificate removed successfully!");
-            setCertificateHash("");
-            setInstitutionAddress("");
+            setLoadingRemove(true);
+            await contract.methods.removeCertificate(removeInstitutionAddress, removeCertificateHash).send({ from: account });
+            alert("Certificate removed successfully!");
+            setRemoveCertificateHash("");
+            setRemoveInstitutionAddress("");
         } catch (error) {
-            console.error("🔴 Error removing certificate:", error);
             alert("Error: " + error.message);
         } finally {
-            setLoading(false);
+            setLoadingRemove(false);
         }
     };
 
     // Grant Certificate Access
     const grantCertificateAccess = async () => {
-        if (!contract) {
-            alert("❌ Contract not connected!");
-            return;
-        }
-        if (!contract.methods?.grantCertificateAccess) {
-            alert("❌ grantCertificateAccess method not found!");
-            return;
-        }
+        if (!contract) return alert("Contract not connected!");
 
         try {
-            console.log("📌 Granting access to:", viewerAddress);
-            setLoading(true);
-            await contract.methods.grantCertificateAccess(viewerAddress, institutionAddress, certificateHash).send({ from: account });
-            alert("✅ Access granted successfully!");
-            setViewerAddress("");
-            setInstitutionAddress("");
-            setCertificateHash("");
+            setLoadingGrant(true);
+            await contract.methods.grantCertificateAccess(grantViewerAddress, grantInstitutionAddress, grantCertificateHash).send({ from: account });
+            alert("Access granted successfully!");
+            setGrantViewerAddress("");
+            setGrantInstitutionAddress("");
+            setGrantCertificateHash("");
         } catch (error) {
-            console.error("🔴 Error granting access:", error);
             alert("Error: " + error.message);
         } finally {
-            setLoading(false);
+            setLoadingGrant(false);
         }
     };
 
     // Check Certificate Access
     const checkCertificateAccess = async () => {
-        if (!contract) {
-            alert("❌ Contract not connected!");
-            return;
-        }
-        if (!contract.methods?.canViewCertificate) {
-            alert("❌ canViewCertificate method not found!");
-            return;
-        }
+        if (!contract) return alert("Contract not connected!");
 
         try {
-            console.log("📌 Checking access for:", viewerAddress);
-            setLoading(true);
-            const result = await contract.methods.canViewCertificate(viewerAddress, institutionAddress, certificateHash).call();
+            setLoadingCheck(true);
+            const result = await contract.methods.canViewCertificate(checkViewerAddress, checkInstitutionAddress, checkCertificateHash).call();
             setHasAccess(result);
         } catch (error) {
-            console.error("🔴 Error checking access:", error);
             alert("Error: " + error.message);
         } finally {
-            setLoading(false);
+            setLoadingCheck(false);
         }
     };
 
@@ -143,17 +121,17 @@ const Student = ({ account }) => {
                 <input
                     type="text"
                     placeholder="Enter Certificate Hash"
-                    value={certificateHash}
-                    onChange={(e) => setCertificateHash(e.target.value)}
+                    value={addCertificateHash}
+                    onChange={(e) => setAddCertificateHash(e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Enter Institution Address"
-                    value={institutionAddress}
-                    onChange={(e) => setInstitutionAddress(e.target.value)}
+                    value={addInstitutionAddress}
+                    onChange={(e) => setAddInstitutionAddress(e.target.value)}
                 />
-                <button onClick={addCertificateForStudent} disabled={loading}>
-                    {loading ? "Processing..." : "➕ Add Certificate"}
+                <button id="addCertificateButton" onClick={addCertificateForStudent} disabled={loadingAdd}>
+                    {loadingAdd ? "Processing..." : "➕ Add Certificate"}
                 </button>
             </div>
 
@@ -163,17 +141,17 @@ const Student = ({ account }) => {
                 <input
                     type="text"
                     placeholder="Enter Certificate Hash"
-                    value={certificateHash}
-                    onChange={(e) => setCertificateHash(e.target.value)}
+                    value={removeCertificateHash}
+                    onChange={(e) => setRemoveCertificateHash(e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Enter Institution Address"
-                    value={institutionAddress}
-                    onChange={(e) => setInstitutionAddress(e.target.value)}
+                    value={removeInstitutionAddress}
+                    onChange={(e) => setRemoveInstitutionAddress(e.target.value)}
                 />
-                <button onClick={removeCertificate} disabled={loading}>
-                    {loading ? "Processing..." : "🗑 Remove Certificate"}
+                <button id="removeCertificateButton" onClick={removeCertificate} disabled={loadingRemove}>
+                    {loadingRemove ? "Processing..." : "🗑 Remove Certificate"}
                 </button>
             </div>
 
@@ -183,23 +161,23 @@ const Student = ({ account }) => {
                 <input
                     type="text"
                     placeholder="Enter Viewer Address"
-                    value={viewerAddress}
-                    onChange={(e) => setViewerAddress(e.target.value)}
+                    value={grantViewerAddress}
+                    onChange={(e) => setGrantViewerAddress(e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Enter Institution Address"
-                    value={institutionAddress}
-                    onChange={(e) => setInstitutionAddress(e.target.value)}
+                    value={grantInstitutionAddress}
+                    onChange={(e) => setGrantInstitutionAddress(e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Enter Certificate Hash"
-                    value={certificateHash}
-                    onChange={(e) => setCertificateHash(e.target.value)}
+                    value={grantCertificateHash}
+                    onChange={(e) => setGrantCertificateHash(e.target.value)}
                 />
-                <button onClick={grantCertificateAccess} disabled={loading}>
-                    {loading ? "Processing..." : "🔓 Grant Access"}
+                <button id="grantCertificateAccessButton" onClick={grantCertificateAccess} disabled={loadingGrant}>
+                    {loadingGrant ? "Processing..." : "🔓 Grant Access"}
                 </button>
             </div>
 
@@ -209,23 +187,23 @@ const Student = ({ account }) => {
                 <input
                     type="text"
                     placeholder="Enter Viewer Address"
-                    value={viewerAddress}
-                    onChange={(e) => setViewerAddress(e.target.value)}
+                    value={checkViewerAddress}
+                    onChange={(e) => setCheckViewerAddress(e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Enter Institution Address"
-                    value={institutionAddress}
-                    onChange={(e) => setInstitutionAddress(e.target.value)}
+                    value={checkInstitutionAddress}
+                    onChange={(e) => setCheckInstitutionAddress(e.target.value)}
                 />
                 <input
                     type="text"
                     placeholder="Enter Certificate Hash"
-                    value={certificateHash}
-                    onChange={(e) => setCertificateHash(e.target.value)}
+                    value={checkCertificateHash}
+                    onChange={(e) => setCheckCertificateHash(e.target.value)}
                 />
-                <button onClick={checkCertificateAccess} disabled={loading}>
-                    {loading ? "Checking..." : "🔍 Check Access"}
+                <button id="checkCertificateAccessButton" onClick={checkCertificateAccess} disabled={loadingCheck}>
+                    {loadingCheck ? "Checking..." : "🔍 Check Access"}
                 </button>
                 {hasAccess !== null && (
                     <p>🔹 Access Status: {hasAccess ? "✅ Granted" : "❌ Not Granted"}</p>

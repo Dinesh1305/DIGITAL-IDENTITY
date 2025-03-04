@@ -8,7 +8,8 @@ const Admin = ({ account }) => {
   const [contract, setContract] = useState(null);
   const [collegeAddress, setCollegeAddress] = useState("");
   const [onlinePlatformAddress, setOnlinePlatformAddress] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingCollege, setLoadingCollege] = useState(false);
+  const [loadingPlatform, setLoadingPlatform] = useState(false);
 
   // Initialize Web3 and Contract
   useEffect(() => {
@@ -29,7 +30,7 @@ const Admin = ({ account }) => {
   }, []);
 
   // Helper Function to Handle Transactions
-  const sendTransaction = async (method, params) => {
+  const sendTransaction = async (method, params, setLoading) => {
     if (!contract) {
       alert("Contract not connected!");
       return;
@@ -71,8 +72,12 @@ const Admin = ({ account }) => {
           value={collegeAddress}
           onChange={(e) => setCollegeAddress(e.target.value)}
         />
-        <button onClick={() => sendTransaction("addCollege", [collegeAddress])} disabled={loading}>
-          {loading ? "Adding..." : "Add College"}
+        <button 
+          id="add-college-btn"
+          onClick={() => sendTransaction("addCollege", [collegeAddress], setLoadingCollege)} 
+          disabled={loadingCollege}
+        >
+          {loadingCollege ? "Adding..." : "Add College"}
         </button>
       </div>
 
@@ -85,8 +90,12 @@ const Admin = ({ account }) => {
           value={onlinePlatformAddress}
           onChange={(e) => setOnlinePlatformAddress(e.target.value)}
         />
-        <button onClick={() => sendTransaction("addOnlinePlatform", [onlinePlatformAddress])} disabled={loading}>
-          {loading ? "Adding..." : "Add Online Platform"}
+        <button 
+          id="add-platform-btn"
+          onClick={() => sendTransaction("addOnlinePlatform", [onlinePlatformAddress], setLoadingPlatform)} 
+          disabled={loadingPlatform}
+        >
+          {loadingPlatform ? "Adding..." : "Add Online Platform"}
         </button>
       </div>
     </div>
