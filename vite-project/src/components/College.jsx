@@ -146,9 +146,7 @@ const College = ({ account }) => {
                 <h3>📤 Upload File to IPFS</h3>
                 <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} />
                 <button onClick={uploadToIPFS} disabled={loading}>{loading ? "Uploading..." : "📤 Upload File"}</button>
-                {fileHash && (
-                    <p>✅ File Uploaded: <a href={`https://gateway.pinata.cloud/ipfs/${fileHash}`} target="_blank" rel="noopener noreferrer">View on IPFS</a></p>
-                )}
+                {fileHash && <p>📌 IPFS Hash: {fileHash}</p>}
             </div>
         </div>
     );
