@@ -4,44 +4,73 @@ import contractABI from "../Json/Digital_identity.json";
 
 const contractAddress = "0x1aeF3816F9676d3FE1e36f8eEd6bE839a2c362AD"; // Replace with actual contract address
 
-const Company = ({ account }) => {
+const Company = () => {
+    const [account, setAccount] = useState(null);
     const [contract, setContract] = useState(null);
     const [studentAddress, setStudentAddress] = useState("");
-    const [institutionAddress, setInstitutionAddress] = useState("");
     const [certificateHash, setCertificateHash] = useState("");
-    const [hasAccess, setHasAccess] = useState(false);
+    const [studentCertificates, setStudentCertificates] = useState([]);
+    const [loadingCertificates, setLoadingCertificates] = useState(false);
 
     useEffect(() => {
         const loadBlockchainData = async () => {
             try {
-                const web3 = new Web3(window.ethereum);
-                const deployedContract = new web3.eth.Contract(contractABI.abi, contractAddress);
-                setContract(deployedContract);
+                // Check if Ethereum provider is available
+                if (window.ethereum) {
+                    const web3 = new Web3(window.ethereum);
+                    const accounts = await web3.eth.requestAccounts();
+                    if (accounts.length === 0) {
+                        alert("Please connect your wallet to continue.");
+                    } else {
+                        setAccount(accounts[0]);
+                    }
+                    const deployedContract = new web3.eth.Contract(contractABI.abi, contractAddress);
+                    setContract(deployedContract);
+                } else {
+                    alert("Ethereum wallet is not installed. Please install MetaMask.");
+                }
             } catch (error) {
                 console.error("🔴 Error loading contract:", error);
             }
         };
+
         loadBlockchainData();
     }, []);
 
-    const checkCertificateAccess = async () => {
+    // Function to request certificate access from the student
+    const requestCertificateAccess = async () => {
         if (!contract) return alert("❌ Contract not connected!");
-        if (!contract.methods?.canViewCertificate) return alert("❌ Method not found!");
+        if (!account) return alert("❌ Wallet account is not connected!");
 
         try {
-            const access = await contract.methods
-                .canViewCertificate(studentAddress, institutionAddress, certificateHash)
+            await contract.methods.requestCertificateAccess(studentAddress).send({ from: account });
+            alert("📩 Request sent to the student for certificate access!");
+        } catch (error) {
+            console.error("🔴 Error sending request:", error);
+            alert("Error: " + error.message);
+        }
+    };
+
+    // Function to get student's certificates (for the company to view)
+    const getStudentCertificates = async () => {
+        if (!contract) return alert("❌ Contract not connected!");
+        if (!account) return alert("❌ Wallet account is not connected!");
+
+        setLoadingCertificates(true);
+        try {
+            const certificates = await contract.methods
+                .getStudentCertificatesForCompany(studentAddress)
                 .call({ from: account });
 
-            setHasAccess(access);
-            if (access) {
-                alert("✅ You have access to view this certificate!");
-            } else {
-                alert("❌ You do not have access to view this certificate!");
+            setStudentCertificates(certificates);
+            if (certificates.length === 0) {
+                alert("No certificates available for this student.");
             }
         } catch (error) {
-            console.error("🔴 Error checking access:", error);
+            console.error("🔴 Error retrieving certificates:", error);
             alert("Error: " + error.message);
+        } finally {
+            setLoadingCertificates(false);
         }
     };
 
@@ -49,25 +78,43 @@ const Company = ({ account }) => {
         <div className="p-4">
             <h2 className="text-lg font-bold">🏢 Company Panel</h2>
 
+            {/* Request Certificate Access */}
             <div className="input-group">
-                <h3>🔍 Check Certificate Access</h3>
-                <input type="text" placeholder="Enter Student Address" value={studentAddress} onChange={(e) => setStudentAddress(e.target.value)} />
-                <input type="text" placeholder="Enter Institution Address" value={institutionAddress} onChange={(e) => setInstitutionAddress(e.target.value)} />
-                <input type="text" placeholder="Enter Certificate Hash" value={certificateHash} onChange={(e) => setCertificateHash(e.target.value)} />
-                <button onClick={checkCertificateAccess}>🔍 Check Access</button>
+                <h3>📩 Request Certificate Access</h3>
+                <input
+                    type="text"
+                    placeholder="Enter Student Address"
+                    value={studentAddress}
+                    onChange={(e) => setStudentAddress(e.target.value)}
+                />
+                <button onClick={requestCertificateAccess}>Request Access</button>
             </div>
 
-            {hasAccess && certificateHash && (
+            {/* Get Student's Certificates */}
+            <div className="input-group">
+                <h3>📜 View Student's Certificates</h3>
+                <button onClick={getStudentCertificates} disabled={loadingCertificates}>
+                    {loadingCertificates ? "Loading..." : "Get Certificates"}
+                </button>
                 <div>
-                    <h3>📜 Certificate Preview</h3>
-                    <img 
-                        src={`https://gateway.pinata.cloud/ipfs/${certificateHash}`} 
-                        alt="Certificate" 
-                        onError={(e) => { e.target.src = "/default-certificate.png"; }} 
-                        style={{ width: "100%", maxWidth: "500px", border: "2px solid white", borderRadius: "8px" }} 
-                    />
+                    {studentCertificates.length > 0 && (
+                        <div>
+                            <h4>Certificates:</h4>
+                            {studentCertificates.map((certificate, index) => (
+                                <div key={index}>
+                                    <a
+                                        href={`https://gateway.pinata.cloud/ipfs/${certificate}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        View Certificate {index + 1}
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     );
 };

@@ -51,12 +51,12 @@ const Student = () => {
     }, []);
 
     // Add Certificate
-    const addCertificateForStudent = async () => {
+    const addStudentCertificate = async () => {
         if (!contract || !account) return alert("Contract or account not connected!");
 
         try {
             setLoadingAdd(true);
-            await contract.methods.addCertificateForStudent(addCertificateHash, addInstitutionAddress).send({ from: account });
+            await contract.methods.addStudentCertificate(addInstitutionAddress, addCertificateHash).send({ from: account });
             alert("Certificate added successfully!");
             setAddCertificateHash("");
             setAddInstitutionAddress("");
@@ -73,10 +73,9 @@ const Student = () => {
 
         try {
             setLoadingRemove(true);
-            await contract.methods.removeCertificate(removeInstitutionAddress, removeCertificateHash).send({ from: account });
+            await contract.methods.removeStudentCertificate(removeCertificateHash).send({ from: account });
             alert("Certificate removed successfully!");
             setRemoveCertificateHash("");
-            setRemoveInstitutionAddress("");
         } catch (error) {
             alert("Error: " + error.message);
         } finally {
@@ -107,7 +106,7 @@ const Student = () => {
         if (!contract || !account) return alert("Contract or account not connected!");
 
         try {
-            await contract.methods.removeViewerFromRequest(viewerAddress).send({ from: account });
+            await contract.methods.removeViewer(viewerAddress).send({ from: account });
             alert("Request rejected!");
             setRequests(requests.filter((request) => request.viewer !== viewerAddress)); // Remove from requests list
         } catch (error) {
@@ -121,7 +120,7 @@ const Student = () => {
 
         try {
             setLoadingRequests(true);
-            const result = await contract.methods.getViewerRequests(account).call();
+            const result = await contract.methods.getCompanyRequests().call();
             setRequests(result);
         } catch (error) {
             alert("Error: " + error.message);
@@ -168,7 +167,7 @@ const Student = () => {
                         style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
                     />
                     <button
-                        onClick={addCertificateForStudent}
+                        onClick={addStudentCertificate}
                         disabled={loadingAdd}
                         style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
                     >
@@ -184,13 +183,6 @@ const Student = () => {
                         placeholder="Enter Certificate Hash"
                         value={removeCertificateHash}
                         onChange={(e) => setRemoveCertificateHash(e.target.value)}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter Institution Address"
-                        value={removeInstitutionAddress}
-                        onChange={(e) => setRemoveInstitutionAddress(e.target.value)}
                         style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
                     />
                     <button
