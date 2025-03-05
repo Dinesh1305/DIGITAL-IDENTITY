@@ -1,84 +1,48 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { ethers } from "ethers";
-import abi from "./Json/Digital_identity.json";
-import "./App.css";
-
-// Import Components
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Admin from "./components/Admin";
 import College from "./components/College";
+import Company from "./components/Company";
 import OnlinePlatform from "./components/OnlinePlatform";
 import Student from "./components/Student";
-import Company from "./components/Company";
+import "./App.css";
 
-function App() {
-  const [state, setState] = useState({
-    provider: null,
-    signer: null,
-    contract: null,
-    account: "Not connected",
-  });
+const entities = [
+  { name: "Admin", image: "/images/admin.png", path: "/admin" },
+  { name: "College", image: "/images/college.png", path: "/college" },
+  { name: "Online Platform", image: "/images/platform.png", path: "/platform" },
+  { name: "Student", image: "/images/student.png", path: "/student" },
+  { name: "Company", image: "/images/company.png", path: "/company" },
+];
 
-  useEffect(() => {
-    const connectWallet = async () => {
-      try {
-        if (!window.ethereum) {
-          alert("Please install MetaMask to use this application.");
-          return;
-        }
-
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-
-        const signer = provider.getSigner();
-        const accounts = await provider.listAccounts();
-
-        if (accounts.length === 0) {
-          alert("No account connected. Please unlock MetaMask.");
-          return;
-        }
-
-        const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7"; // Change if needed
-        const contractABI = abi.abi;
-        const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-        setState({ provider, signer, contract, account: accounts[0] });
-
-        console.log("Connected to contract:", contract);
-        alert("Wallet Connected: " + accounts[0]);
-      } catch (error) {
-        console.error("Connection error:", error);
-        alert("Failed to connect: " + error.message);
-      }
-    };
-
-    connectWallet();
-  }, []);
-
+function Home() {
   return (
-    <Router>
-      <div className="container">
-        <h1>🔐 Digital Identity Verification System</h1>
-        <p>👤 Connected Account: <strong>{state.account}</strong></p>
-
-        <nav className="button-container">
-          <Link to="/admin"><button>👨‍💼 Admin</button></Link>
-          <Link to="/college"><button>🏫 College</button></Link>
-          <Link to="/online-platform"><button>🌐 Online Platform</button></Link>
-          <Link to="/student"><button>🎓 Student</button></Link>
-          <Link to="/company"><button>🏢 Company</button></Link>
-        </nav>
-
-        <Routes>
-          <Route path="/admin" element={<Admin contract={state.contract} account={state.account} />} />
-          <Route path="/college" element={<College contract={state.contract} account={state.account} />} />
-          <Route path="/online-platform" element={<OnlinePlatform contract={state.contract} account={state.account} />} />
-          <Route path="/student" element={<Student contract={state.contract} account={state.account} />} />
-          <Route path="/company" element={<Company contract={state.contract} account={state.account} />} />
-        </Routes>
+    <div className="container" style={{ backgroundColor: "white", minHeight: "100vh", padding: "20px" }}>
+      <h1>Digital Identity Verification</h1>
+      <div className="cards-grid">
+        {entities.map((entity) => (
+          <div className="card" key={entity.name} style={{ backgroundColor: "purple", color: "white", borderRadius: "10px", padding: "20px", textAlign: "center" }}>
+            <img src={entity.image} alt={entity.name} className="card-image" style={{ width: "100px", height: "100px" }} />
+            <h3>{entity.name}</h3>
+            <Link to={entity.path} className="card-button" style={{ backgroundColor: "white", color: "purple", padding: "10px", borderRadius: "5px", textDecoration: "none" }}>{entity.name}</Link>
+          </div>
+        ))}
       </div>
-    </Router>
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/college" element={<College />} />
+        <Route path="/company" element={<Company />} />
+        <Route path="/platform" element={<OnlinePlatform />} />
+        <Route path="/student" element={<Student />} />
+      </Routes>
+    </Router>
+  );
+}

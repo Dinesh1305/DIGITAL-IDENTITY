@@ -64,18 +64,20 @@ const Admin = ({ account }) => {
       <h2 className="text-lg font-bold">Admin Panel</h2>
 
       {/* Add College Section */}
-      <div>
-        <h3>Add College</h3>
+      <div className="mb-4">
+        <h3 className="font-semibold">Add College</h3>
         <input
           type="text"
           placeholder="College Address"
           value={collegeAddress}
           onChange={(e) => setCollegeAddress(e.target.value)}
+          className="p-2 border rounded"
         />
         <button 
           id="add-college-btn"
           onClick={() => sendTransaction("addCollege", [collegeAddress], setLoadingCollege)} 
           disabled={loadingCollege}
+          className="ml-2 p-2 bg-blue-500 text-white rounded"
         >
           {loadingCollege ? "Adding..." : "Add College"}
         </button>
@@ -83,17 +85,19 @@ const Admin = ({ account }) => {
 
       {/* Add Online Platform Section */}
       <div>
-        <h3>Add Online Platform</h3>
+        <h3 className="font-semibold">Add Online Platform</h3>
         <input
           type="text"
           placeholder="Online Platform Address"
           value={onlinePlatformAddress}
           onChange={(e) => setOnlinePlatformAddress(e.target.value)}
+          className="p-2 border rounded"
         />
         <button 
           id="add-platform-btn"
           onClick={() => sendTransaction("addOnlinePlatform", [onlinePlatformAddress], setLoadingPlatform)} 
           disabled={loadingPlatform}
+          className="ml-2 p-2 bg-green-500 text-white rounded"
         >
           {loadingPlatform ? "Adding..." : "Add Online Platform"}
         </button>

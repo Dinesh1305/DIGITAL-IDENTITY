@@ -31,6 +31,7 @@ const College = ({ account }) => {
                 console.log("🟢 Contract Address:", deployedContract.options.address);
             } catch (error) {
                 console.error("🔴 Error loading contract:", error);
+                alert("Failed to load contract. Check the console for details.");
             }
         };
 
@@ -40,7 +41,7 @@ const College = ({ account }) => {
     // Add Student to College
     const addStudentToCollege = async () => {
         if (!contract) return alert("❌ Contract not connected!");
-        if (!contract.methods?.addStudentToCollege) return alert("❌ Method not found!");
+        if (!contract.methods?.addStudentToCollege) return alert("❌ Method 'addStudentToCollege' not found!");
 
         try {
             setLoadingStudent(true);
@@ -59,7 +60,7 @@ const College = ({ account }) => {
     // Add College Certificate
     const addCollegeCertificate = async () => {
         if (!contract) return alert("❌ Contract not connected!");
-        if (!contract.methods?.addCollegeCertificate) return alert("❌ Method not found!");
+        if (!contract.methods?.addCollegeCertificate) return alert("❌ Method 'addCollegeCertificate' not found!");
 
         try {
             setLoadingCertificate(true);
@@ -96,8 +97,8 @@ const College = ({ account }) => {
         try {
             setLoadingFile(true);
 
-            const API_KEY = "47bd44641506f1853cd9";
-            const SECRET_KEY = "ede7f36ff4b7a93b31f7ab139f321472aabf3fe2541d8ab8f8bb3661cb3f7867";
+            const API_KEY = "47bd44641506f1853cd9"; // Replace with your Pinata API Key
+            const SECRET_KEY = "ede7f36ff4b7a93b31f7ab139f321472aabf3fe2541d8ab8f8bb3661cb3f7867"; // Replace with your Pinata Secret Key
 
             if (!API_KEY || !SECRET_KEY) {
                 throw new Error("Pinata API keys are missing! Check your .env file.");
@@ -124,73 +125,90 @@ const College = ({ account }) => {
     };
 
     return (
-        <div className="p-4">
-            <h2 className="text-lg font-bold">🏫 College Panel</h2>
+        <div 
+            className="min-h-screen p-4 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/college.jpg')" }}
+        >
+            <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
+                <h2 className="text-lg font-bold">🏫 College Panel</h2>
 
-            {/* Add Student to College Section */}
-            <div className="input-group">
-                <h3>👨‍🎓 Add Student to College</h3>
-                <input 
-                    type="text" 
-                    id="student-address-college"
-                    placeholder="Student Address" 
-                    value={studentAddressCollege} 
-                    onChange={(e) => setStudentAddressCollege(e.target.value)} 
-                />
-                <input 
-                    type="text" 
-                    id="college-address"
-                    placeholder="College Address" 
-                    value={collegeAddress} 
-                    onChange={(e) => setCollegeAddress(e.target.value)} 
-                />
-                <button 
-                    id="add-student-btn" 
-                    onClick={addStudentToCollege} 
-                    disabled={loadingStudent}
-                >
-                    {loadingStudent ? "Adding..." : "➕ Add Student"}
-                </button>
-            </div>
+                {/* Add Student to College Section */}
+                <div className="input-group">
+                    <h3>👨‍🎓 Add Student to College</h3>
+                    <input 
+                        type="text" 
+                        id="student-address-college"
+                        placeholder="Student Address" 
+                        value={studentAddressCollege} 
+                        onChange={(e) => setStudentAddressCollege(e.target.value)} 
+                        className="input-field"
+                    />
+                    <input 
+                        type="text" 
+                        id="college-address"
+                        placeholder="College Address" 
+                        value={collegeAddress} 
+                        onChange={(e) => setCollegeAddress(e.target.value)} 
+                        className="input-field"
+                    />
+                    <button 
+                        id="add-student-btn" 
+                        onClick={addStudentToCollege} 
+                        disabled={loadingStudent}
+                        className="action-button"
+                    >
+                        {loadingStudent ? "Adding..." : "➕ Add Student"}
+                    </button>
+                </div>
 
-            {/* Add Certificate for Student Section */}
-            <div className="input-group">
-                <h3>📜 Add Certificate for Student</h3>
-                <input 
-                    type="text" 
-                    id="student-address-certificate"
-                    placeholder="Student Address" 
-                    value={studentAddressCertificate} 
-                    onChange={(e) => setStudentAddressCertificate(e.target.value)} 
-                />
-                <input 
-                    type="text" 
-                    id="certificate-name"
-                    placeholder="Certificate Name" 
-                    value={certificateName} 
-                    onChange={(e) => setCertificateName(e.target.value)} 
-                />
-                <button 
-                    id="add-certificate-btn" 
-                    onClick={addCollegeCertificate} 
-                    disabled={loadingCertificate}
-                >
-                    {loadingCertificate ? "Adding..." : "➕ Add Certificate"}
-                </button>
-            </div>
+                {/* Add Certificate for Student Section */}
+                <div className="input-group">
+                    <h3>📜 Add Certificate for Student</h3>
+                    <input 
+                        type="text" 
+                        id="student-address-certificate"
+                        placeholder="Student Address" 
+                        value={studentAddressCertificate} 
+                        onChange={(e) => setStudentAddressCertificate(e.target.value)} 
+                        className="input-field"
+                    />
+                    <input 
+                        type="text" 
+                        id="certificate-name"
+                        placeholder="Certificate Name" 
+                        value={certificateName} 
+                        onChange={(e) => setCertificateName(e.target.value)} 
+                        className="input-field"
+                    />
+                    <button 
+                        id="add-certificate-btn" 
+                        onClick={addCollegeCertificate} 
+                        disabled={loadingCertificate}
+                        className="action-button"
+                    >
+                        {loadingCertificate ? "Adding..." : "➕ Add Certificate"}
+                    </button>
+                </div>
 
-            {/* Upload File to IPFS */}
-            <div className="input-group">
-                <h3>📤 Upload File to IPFS</h3>
-                <input type="file" id="upload-file" onChange={(e) => setSelectedFile(e.target.files[0])} />
-                <button 
-                    id="upload-file-btn" 
-                    onClick={uploadToIPFS} 
-                    disabled={loadingFile}
-                >
-                    {loadingFile ? "Uploading..." : "📤 Upload File"}
-                </button>
-                {fileHash && <p>📌 IPFS Hash: {fileHash}</p>}
+                {/* Upload File to IPFS */}
+                <div className="input-group">
+                    <h3>📤 Upload File to IPFS</h3>
+                    <input 
+                        type="file" 
+                        id="upload-file" 
+                        onChange={(e) => setSelectedFile(e.target.files[0])} 
+                        className="input-field"
+                    />
+                    <button 
+                        id="upload-file-btn" 
+                        onClick={uploadToIPFS} 
+                        disabled={loadingFile}
+                        className="action-button"
+                    >
+                        {loadingFile ? "Uploading..." : "📤 Upload File"}
+                    </button>
+                    {fileHash && <p>📌 IPFS Hash: {fileHash}</p>}
+                </div>
             </div>
         </div>
     );
