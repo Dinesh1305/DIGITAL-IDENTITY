@@ -35,8 +35,8 @@ h1 {
 
 /* Card styling */
 .card {
-  background-color: purple;
-  color: white;
+  background-color: white;
+  color: purple;
   border-radius: 10px;
   padding: 20px;
   text-align: center;
@@ -77,11 +77,11 @@ h1 {
 /* Wrapper to center the Admin Panel both horizontally and vertically */
 .admin-wrapper {
   display: flex;
-  justify-content: center;  /* Centers horizontally */
-  align-items: center;      /* Centers vertically */
-  height: 100vh;            /* Full viewport height */
-  width: 100vw;             /* Full viewport width */
-  background-color: #f5f5f5; /* Light background for contrast */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f5f5f5;
 }
 
 /* Admin Container */
@@ -89,8 +89,8 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: purple;
-  color: white;
+  background-color: white;
+  color: purple;
   border-radius: 10px;
   padding: 30px;
   max-width: 400px;
@@ -110,7 +110,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; /* Adds spacing between elements */
+  gap: 10px;
   margin-bottom: 20px;
   width: 100%;
 }
@@ -119,13 +119,16 @@ h1 {
 .admin-label {
   font-size: 1.2em;
   font-weight: bold;
-  color: white;
+  color: purple;
+  background-color: white;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 /* Inputs */
 .admin-input {
   padding: 10px;
-  border: 2px solid white;
+  border: 2px solid purple;
   border-radius: 5px;
   font-size: 1em;
   color: purple;
@@ -137,6 +140,93 @@ h1 {
 /* Buttons */
 .admin-button {
   padding: 10px 20px;
+  background-color: purple;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  width: 90%;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.admin-button:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
+}
+
+/* Wrapper to center the College Panel */
+.college-wrapper {
+  display: flex;
+  justify-content: center;  /* Centers horizontally */
+  align-items: center;      /* Centers vertically */
+  height: 100vh;            /* Full viewport height */
+  width: 100vw;             /* Full viewport width */
+  background-color: white; /* Changed to purple */
+}
+
+/* College Container */
+.college-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: purple; /* Background is purple */
+  color: white;
+  border-radius: 10px; /* Rounded corners */
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Title */
+.college-title {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Section Layout */
+.college-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;  /* Proper gap between labels and buttons */
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+/* Labels */
+.college-label {
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: white; /* Changed to white */
+  color: purple; /* Text color set to purple for contrast */
+  padding: 5px 10px;
+  border-radius: 5px;
+  width: fit-content;
+}
+
+/* Inputs */
+.college-input {
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 5px;
+  font-size: 1em;
+  color: purple; /* Text inside input is purple */
+  background-color: white;
+  text-align: center;
+  width: 90%;
+}
+
+.college-input::placeholder {
+  color: purple; /* Placeholder text in purple */
+}
+
+/* Buttons */
+.college-button {
+  padding: 10px 20px;
   background-color: white;
   color: purple;
   border: none;
@@ -145,8 +235,83 @@ h1 {
   font-weight: bold;
   cursor: pointer;
   width: 90%;
+  margin-top: 10px; /* Gap between input and button */
 }
 
-.admin-button:hover {
+.college-button:hover {
   background-color: lightgray;
+}
+
+.onlineContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  color: #4a148c;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.onlineCard {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  margin: 15px;
+  width: 350px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.onlineCard:hover {
+  transform: translateY(-5px);
+}
+
+.onlineCard h3 {
+  color: #6a1b9a;
+  font-weight: bold;
+}
+
+.onlineCard input {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: white !important;
+  display: inline-block;
+  padding: 5px 10px;
+  max-width: 200px;
+  border-radius: 5px;
+  color: #6a1b9a;
+}
+
+.onlineCard button {
+  background-color: #6a1b9a;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.onlineCard button:hover {
+  background-color: #4a148c;
+}
+
+.onlineCard p {
+  color: #6a1b9a;
+  font-weight: bold;
+}
+.onlineContainer h2 {
+  width: 100%;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #6a1b9a;
+  margin-top: 20px;
 }
