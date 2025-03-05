@@ -60,47 +60,47 @@ const Admin = ({ account }) => {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-lg font-bold">Admin Panel</h2>
+    <div className="admin-wrapper">
+      <div className="admin-container">
+        <h2 className="admin-title">Admin Panel</h2>
 
-      {/* Add College Section */}
-      <div className="mb-4">
-        <h3 className="font-semibold">Add College</h3>
-        <input
-          type="text"
-          placeholder="College Address"
-          value={collegeAddress}
-          onChange={(e) => setCollegeAddress(e.target.value)}
-          className="p-2 border rounded"
-        />
-        <button 
-          id="add-college-btn"
-          onClick={() => sendTransaction("addCollege", [collegeAddress], setLoadingCollege)} 
-          disabled={loadingCollege}
-          className="ml-2 p-2 bg-blue-500 text-white rounded"
-        >
-          {loadingCollege ? "Adding..." : "Add College"}
-        </button>
-      </div>
+        {/* Add College Section */}
+        <div className="admin-section">
+          <label className="admin-label">Add College</label>
+          <input
+            type="text"
+            placeholder="College Address"
+            value={collegeAddress}
+            onChange={(e) => setCollegeAddress(e.target.value)}
+            className="admin-input"
+          />
+          <button 
+            onClick={() => sendTransaction("addCollege", [collegeAddress], setLoadingCollege)} 
+            disabled={loadingCollege}
+            className="admin-button"
+          >
+            {loadingCollege ? "Adding..." : "Add College"}
+          </button>
+        </div>
 
-      {/* Add Online Platform Section */}
-      <div>
-        <h3 className="font-semibold">Add Online Platform</h3>
-        <input
-          type="text"
-          placeholder="Online Platform Address"
-          value={onlinePlatformAddress}
-          onChange={(e) => setOnlinePlatformAddress(e.target.value)}
-          className="p-2 border rounded"
-        />
-        <button 
-          id="add-platform-btn"
-          onClick={() => sendTransaction("addOnlinePlatform", [onlinePlatformAddress], setLoadingPlatform)} 
-          disabled={loadingPlatform}
-          className="ml-2 p-2 bg-green-500 text-white rounded"
-        >
-          {loadingPlatform ? "Adding..." : "Add Online Platform"}
-        </button>
+        {/* Add Online Platform Section */}
+        <div className="admin-section">
+          <label className="admin-label">Add Online Platform</label>
+          <input
+            type="text"
+            placeholder="Online Platform Address"
+            value={onlinePlatformAddress}
+            onChange={(e) => setOnlinePlatformAddress(e.target.value)}
+            className="admin-input"
+          />
+          <button 
+            onClick={() => sendTransaction("addOnlinePlatform", [onlinePlatformAddress], setLoadingPlatform)} 
+            disabled={loadingPlatform}
+            className="admin-button"
+          >
+            {loadingPlatform ? "Adding..." : "Add Online Platform"}
+          </button>
+        </div>
       </div>
     </div>
   );

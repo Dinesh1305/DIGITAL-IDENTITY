@@ -1,17 +1,30 @@
-.container {
+/* Global styles */
+body {
   background-color: white;
-  min-height: 100vh;
-  padding: 20px;
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
+}
+
+/* Container styling */
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
 }
 
+/* Title styling */
 h1 {
+  text-align: center;
   font-weight: bold;
-  font-family: Arial, sans-serif;
+  color: purple;
+  font-size: 2em;
 }
 
+/* Grid layout for cards */
 .cards-grid {
   display: flex;
   gap: 20px;
@@ -20,6 +33,7 @@ h1 {
   margin-top: 20px;
 }
 
+/* Card styling */
 .card {
   background-color: purple;
   color: white;
@@ -27,48 +41,112 @@ h1 {
   padding: 20px;
   text-align: center;
   width: 200px;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* Card image */
 .card img {
   width: 100px;
   height: 100px;
+  object-fit: cover;
 }
 
-.card h3 {
-  margin: 10px 0;
-}
-
+/* Button inside the card */
 .card-button {
-  display: block;
+  display: inline-block;
   background-color: white;
   color: purple;
   padding: 10px;
   border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
-  font-family: Arial, sans-serif;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  margin-top: 10px;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .card-button:hover {
-  background-color: #d4a3ff;
-  color: white;
+  background-color: #f3e5f5; /* Light purple shade */
 }
 
-/* Center content inside entity pages */
-.entity-container {
+/* Wrapper to center the Admin Panel both horizontally and vertically */
+.admin-wrapper {
+  display: flex;
+  justify-content: center;  /* Centers horizontally */
+  align-items: center;      /* Centers vertically */
+  height: 100vh;            /* Full viewport height */
+  width: 100vw;             /* Full viewport width */
+  background-color: #f5f5f5; /* Light background for contrast */
+}
+
+/* Admin Container */
+.admin-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  text-align: center;
+  background-color: purple;
+  color: white;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Title */
+.admin-title {
+  font-size: 2em;
   font-weight: bold;
-  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+}
+
+/* Section Layout */
+.admin-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Adds spacing between elements */
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+/* Labels */
+.admin-label {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: white;
+}
+
+/* Inputs */
+.admin-input {
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 5px;
+  font-size: 1em;
+  color: purple;
+  background-color: white;
+  text-align: center;
+  width: 90%;
+}
+
+/* Buttons */
+.admin-button {
+  padding: 10px 20px;
+  background-color: white;
+  color: purple;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  width: 90%;
+}
+
+.admin-button:hover {
+  background-color: lightgray;
 }
