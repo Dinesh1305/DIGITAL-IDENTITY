@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Web3 from "web3";
 import contractABI from "../Json/Digital_identity.json";
 
-const contractAddress = "0x86ab9f453215774E50FcE92d1fe3e30Bb0B123E9"; // Replace with actual contract address
+const contractAddress = "0x1aeF3816F9676d3FE1e36f8eEd6bE839a2c362AD"; // Replace with actual contract address
 
 const Company = ({ account }) => {
     const [contract, setContract] = useState(null);

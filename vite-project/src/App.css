@@ -307,11 +307,11 @@ h1 {
   color: #6a1b9a;
   font-weight: bold;
 }
-.onlineContainer h2 {
+h2 {
   width: 100%;
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  color: #6a1b9a;
+  color: purple;
   margin-top: 20px;
 }
