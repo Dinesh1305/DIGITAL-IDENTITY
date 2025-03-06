@@ -9,6 +9,9 @@ const Admin = ({ account }) => {
   const [collegeAddress, setCollegeAddress] = useState("");
   const [onlinePlatformAddress, setOnlinePlatformAddress] = useState("");
   const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [ws, setWs] = useState(null);
 
   // Initialize Web3 and Contract
   useEffect(() => {
@@ -27,6 +30,34 @@ const Admin = ({ account }) => {
 
     loadBlockchainData();
   }, []);
+
+  // WebSocket connection
+  useEffect(() => {
+    const websocket = new WebSocket('wss://your-websocket-server.com');
+    setWs(websocket);
+
+    websocket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      setMessages(prev => [...prev, message]);
+    };
+
+    return () => {
+      websocket.close();
+    };
+  }, []);
+
+  // Send message handler
+  const sendMessage = () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      const message = {
+        sender: account,
+        content: newMessage,
+        timestamp: new Date().toISOString()
+      };
+      ws.send(JSON.stringify(message));
+      setNewMessage("");
+    }
+  };
 
   // Helper Function to Handle Transactions
   const sendTransaction = async (method, params) => {
@@ -61,6 +92,34 @@ const Admin = ({ account }) => {
   return (
     <div className="p-4">
       <h2 className="text-lg font-bold">Admin Panel</h2>
+
+      {/* Chat Section */}
+      <div className="mt-4 p-4 border rounded">
+        <h3 className="font-bold mb-2">Chat</h3>
+        <div className="h-64 overflow-y-auto mb-4 border p-2">
+          {messages.map((msg, i) => (
+            <div key={i} className="mb-2">
+              <span className="text-sm text-gray-600">{msg.sender}: </span>
+              <span>{msg.content}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex">
+          <input
+            type="text"
+            className="flex-grow p-2 border rounded-l"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+          />
+          <button
+            className="bg-blue-500 text-white px-4 rounded-r"
+            onClick={sendMessage}
+          >
+            Send
+          </button>
+        </div>
+      </div>
 
       {/* Add College Section */}
       <div>
