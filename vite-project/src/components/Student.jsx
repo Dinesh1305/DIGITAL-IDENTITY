@@ -11,27 +11,14 @@ const Student = () => {
     // State variables
     const [addCertificateHash, setAddCertificateHash] = useState("");
     const [addInstitutionAddress, setAddInstitutionAddress] = useState("");
-
     const [removeCertificateHash, setRemoveCertificateHash] = useState("");
-    const [removeInstitutionAddress, setRemoveInstitutionAddress] = useState("");
-
-    const [grantCertificateHash, setGrantCertificateHash] = useState("");
-    const [grantInstitutionAddress, setGrantInstitutionAddress] = useState("");
-    const [grantViewerAddress, setGrantViewerAddress] = useState("");
-
-    const [checkCertificateHash, setCheckCertificateHash] = useState("");
-    const [checkInstitutionAddress, setCheckInstitutionAddress] = useState("");
-    const [checkViewerAddress, setCheckViewerAddress] = useState("");
-
-    const [hasAccess, setHasAccess] = useState(null);
     const [requests, setRequests] = useState([]);
 
     // Loading states
     const [loadingAdd, setLoadingAdd] = useState(false);
     const [loadingRemove, setLoadingRemove] = useState(false);
-    const [loadingGrant, setLoadingGrant] = useState(false);
-    const [loadingCheck, setLoadingCheck] = useState(false);
     const [loadingRequests, setLoadingRequests] = useState(false);
+    const [loadingGrant, setLoadingGrant] = useState(false);
 
     useEffect(() => {
         const loadBlockchainData = async () => {
@@ -50,7 +37,7 @@ const Student = () => {
         loadBlockchainData();
     }, []);
 
-    // Add Certificate
+    // Add Student Certificate
     const addStudentCertificate = async () => {
         if (!contract || !account) return alert("Contract or account not connected!");
 
@@ -67,8 +54,8 @@ const Student = () => {
         }
     };
 
-    // Remove Certificate
-    const removeCertificate = async () => {
+    // Remove Student Certificate
+    const removeStudentCertificate = async () => {
         if (!contract || !account) return alert("Contract or account not connected!");
 
         try {
@@ -83,17 +70,31 @@ const Student = () => {
         }
     };
 
+    // Get Company Requests
+    const getCompanyRequests = async () => {
+        if (!contract || !account) return alert("Contract or account not connected!");
+
+        try {
+            setLoadingRequests(true);
+            const result = await contract.methods.getCompanyRequests().call({ from: account });
+            setRequests(result);
+        } catch (error) {
+            alert("Error: " + error.message);
+        } finally {
+            setLoadingRequests(false);
+        }
+    };
+
     // Grant Certificate Access
-    const grantCertificateAccess = async (viewerAddress, institutionAddress) => {
+    const grantCertificateAccess = async (viewerAddress, institutionAddress, certificateHash) => {
         if (!contract || !account) return alert("Contract or account not connected!");
 
         try {
             setLoadingGrant(true);
-            await contract.methods.grantCertificateAccess(viewerAddress, institutionAddress, grantCertificateHash).send({ from: account });
+            await contract.methods.grantCertificateAccess(viewerAddress, institutionAddress, certificateHash).send({ from: account });
             alert("Access granted successfully!");
-            setGrantViewerAddress("");
-            setGrantInstitutionAddress("");
-            setGrantCertificateHash("");
+            // Remove the granted request from the list
+            setRequests(requests.filter(request => request !== viewerAddress));
         } catch (error) {
             alert("Error: " + error.message);
         } finally {
@@ -108,45 +109,15 @@ const Student = () => {
         try {
             await contract.methods.removeViewer(viewerAddress).send({ from: account });
             alert("Request rejected!");
-            setRequests(requests.filter((request) => request.viewer !== viewerAddress)); // Remove from requests list
+            setRequests(requests.filter(request => request !== viewerAddress)); // Remove from requests list
         } catch (error) {
             alert("Error: " + error.message);
-        }
-    };
-
-    // Get Viewer Requests
-    const getViewerRequests = async () => {
-        if (!contract || !account) return alert("Contract or account not connected!");
-
-        try {
-            setLoadingRequests(true);
-            const result = await contract.methods.getCompanyRequests().call();
-            setRequests(result);
-        } catch (error) {
-            alert("Error: " + error.message);
-        } finally {
-            setLoadingRequests(false);
-        }
-    };
-
-    // Check Certificate Access
-    const checkCertificateAccess = async () => {
-        if (!contract || !account) return alert("Contract or account not connected!");
-
-        try {
-            setLoadingCheck(true);
-            const result = await contract.methods.canViewCertificate(checkViewerAddress, checkInstitutionAddress, checkCertificateHash).call();
-            setHasAccess(result);
-        } catch (error) {
-            alert("Error: " + error.message);
-        } finally {
-            setLoadingCheck(false);
         }
     };
 
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-            <div className="centered-div" style={{ backgroundColor: "purple", color: "white", borderRadius: "20px" }}>
+            <div className="centered-div" style={{ backgroundColor: "purple", color: "white", borderRadius: "20px", padding: "20px" }}>
                 <h2 className="text-lg font-bold" style={{ color: "white" }}>🎓 Student Panel</h2>
 
                 {/* Add Certificate Section */}
@@ -154,22 +125,22 @@ const Student = () => {
                     <h3>📜 Add Certificate</h3>
                     <input
                         type="text"
-                        placeholder="Enter Certificate Hash"
-                        value={addCertificateHash}
-                        onChange={(e) => setAddCertificateHash(e.target.value)}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
-                    />
-                    <input
-                        type="text"
                         placeholder="Enter Institution Address"
                         value={addInstitutionAddress}
                         onChange={(e) => setAddInstitutionAddress(e.target.value)}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
+                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px", padding: "5px" }}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Enter Certificate Hash"
+                        value={addCertificateHash}
+                        onChange={(e) => setAddCertificateHash(e.target.value)}
+                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px", padding: "5px" }}
                     />
                     <button
                         onClick={addStudentCertificate}
                         disabled={loadingAdd}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
+                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px", padding: "5px" }}
                     >
                         {loadingAdd ? "Processing..." : "➕ Add Certificate"}
                     </button>
@@ -183,12 +154,12 @@ const Student = () => {
                         placeholder="Enter Certificate Hash"
                         value={removeCertificateHash}
                         onChange={(e) => setRemoveCertificateHash(e.target.value)}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
+                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px", padding: "5px" }}
                     />
                     <button
-                        onClick={removeCertificate}
+                        onClick={removeStudentCertificate}
                         disabled={loadingRemove}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
+                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px", padding: "5px" }}
                     >
                         {loadingRemove ? "Processing..." : "🗑 Remove Certificate"}
                     </button>
@@ -198,70 +169,34 @@ const Student = () => {
                 <div className="input-group">
                     <h3>👥 View Requests from Companies</h3>
                     <button
-                        onClick={getViewerRequests}
+                        onClick={getCompanyRequests}
                         disabled={loadingRequests}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
+                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px", padding: "5px" }}
                     >
                         {loadingRequests ? "Loading..." : "🔄 Get Requests"}
                     </button>
-                    {requests.length > 0 && (
+                    {requests.length > 0 ? (
                         <div>
-                            {requests.map((request) => (
-                                <div key={request.viewer}>
-                                    <p>📩 Request from: {request.viewer}</p>
+                            {requests.map((request, index) => (
+                                <div key={index} style={{ margin: "10px 0" }}>
+                                    <p>📩 Request from: {request}</p>
                                     <button
-                                        onClick={() => grantCertificateAccess(request.viewer, request.institution)}
-                                        style={{ backgroundColor: "green", color: "white", border: "1px solid white", margin: "10px" }}
+                                        onClick={() => grantCertificateAccess(request, addInstitutionAddress, addCertificateHash)}
+                                        style={{ backgroundColor: "green", color: "white", border: "1px solid white", margin: "5px", padding: "5px" }}
                                     >
-                                        Accept
+                                        Agree
                                     </button>
                                     <button
-                                        onClick={() => removeViewerFromRequest(request.viewer)}
-                                        style={{ backgroundColor: "red", color: "white", border: "1px solid white", margin: "10px" }}
+                                        onClick={() => removeViewerFromRequest(request)}
+                                        style={{ backgroundColor: "red", color: "white", border: "1px solid white", margin: "5px", padding: "5px" }}
                                     >
                                         Reject
                                     </button>
                                 </div>
                             ))}
                         </div>
-                    )}
-                </div>
-
-                {/* Check Certificate Access Section */}
-                <div className="input-group">
-                    <h3>🔍 Check Certificate Access</h3>
-                    <input
-                        type="text"
-                        placeholder="Enter Viewer Address"
-                        value={checkViewerAddress}
-                        onChange={(e) => setCheckViewerAddress(e.target.value)}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter Institution Address"
-                        value={checkInstitutionAddress}
-                        onChange={(e) => setCheckInstitutionAddress(e.target.value)}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Enter Certificate Hash"
-                        value={checkCertificateHash}
-                        onChange={(e) => setCheckCertificateHash(e.target.value)}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
-                    />
-                    <button
-                        onClick={checkCertificateAccess}
-                        disabled={loadingCheck}
-                        style={{ backgroundColor: "white", color: "purple", border: "1px solid white", margin: "10px" }}
-                    >
-                        {loadingCheck ? "Checking..." : "🔍 Check Access"}
-                    </button>
-                    {hasAccess !== null && (
-                        <p style={{ color: hasAccess ? "green" : "red" }}>
-                            🔹 Access Status: {hasAccess ? "✅ Granted" : "❌ Not Granted"}
-                        </p>
+                    ) : (
+                        <p>No requests found.</p>
                     )}
                 </div>
             </div>

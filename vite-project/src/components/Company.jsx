@@ -15,7 +15,6 @@ const Company = () => {
     useEffect(() => {
         const loadBlockchainData = async () => {
             try {
-                // Check if Ethereum provider is available
                 if (window.ethereum) {
                     const web3 = new Web3(window.ethereum);
                     const accounts = await web3.eth.requestAccounts();
@@ -37,7 +36,6 @@ const Company = () => {
         loadBlockchainData();
     }, []);
 
-    // Function to request certificate access from the student
     const requestCertificateAccess = async () => {
         if (!contract) return alert("❌ Contract not connected!");
         if (!account) return alert("❌ Wallet account is not connected!");
@@ -51,7 +49,6 @@ const Company = () => {
         }
     };
 
-    // Function to get student's certificates (for the company to view)
     const getStudentCertificates = async () => {
         if (!contract) return alert("❌ Contract not connected!");
         if (!account) return alert("❌ Wallet account is not connected!");
@@ -75,25 +72,24 @@ const Company = () => {
     };
 
     return (
-        <div className="p-4">
-            <h2 className="text-lg font-bold">🏢 Company Panel</h2>
+        <div className="companyContainer">
+            <h2 className="companyTitle">🏢 Company Panel</h2>
 
-            {/* Request Certificate Access */}
-            <div className="input-group">
+            <div className="inputGroup">
                 <h3>📩 Request Certificate Access</h3>
                 <input
                     type="text"
+                    className="companyInput"
                     placeholder="Enter Student Address"
                     value={studentAddress}
                     onChange={(e) => setStudentAddress(e.target.value)}
                 />
-                <button onClick={requestCertificateAccess}>Request Access</button>
+                <button className="companyButton" onClick={requestCertificateAccess}>Request Access</button>
             </div>
 
-            {/* Get Student's Certificates */}
-            <div className="input-group">
+            <div className="inputGroup">
                 <h3>📜 View Student's Certificates</h3>
-                <button onClick={getStudentCertificates} disabled={loadingCertificates}>
+                <button className="companyButton" onClick={getStudentCertificates} disabled={loadingCertificates}>
                     {loadingCertificates ? "Loading..." : "Get Certificates"}
                 </button>
                 <div>
@@ -103,6 +99,7 @@ const Company = () => {
                             {studentCertificates.map((certificate, index) => (
                                 <div key={index}>
                                     <a
+                                        className="companyLink"
                                         href={`https://gateway.pinata.cloud/ipfs/${certificate}`}
                                         target="_blank"
                                         rel="noopener noreferrer"

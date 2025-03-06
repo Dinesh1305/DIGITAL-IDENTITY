@@ -162,7 +162,8 @@ h1 {
   justify-content: center;  /* Centers horizontally */
   align-items: center;      /* Centers vertically */
   height: 100vh;            /* Full viewport height */
-  width: 100vw;             /* Full viewport width */
+  width: 100vw;       
+  color: white;      /* Full viewport width */
   background-color: white; /* Changed to purple */
 }
 
@@ -185,6 +186,7 @@ h1 {
   font-size: 2em;
   font-weight: bold;
   margin-bottom: 20px;
+  color: white;
 }
 
 /* Section Layout */
@@ -314,4 +316,109 @@ h2 {
   font-weight: bold;
   color: purple;
   margin-top: 20px;
+}
+/* Company Panel Styles */
+/* Ensure body takes the full height of the screen */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f4f4f4; /* Optional: background color */
+}
+
+/* Company container styles */
+.companyContainer {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* Centers items horizontally */
+  justify-content: center;  /* Centers items vertically */
+  color: #6a1b9a;
+}
+
+/* Company Panel Title */
+.companyTitle {
+  font-weight: bold;
+  font-size: 2em;
+  color: purple;
+  text-align: center;
+}
+
+/* Input Group */
+.inputGroup {
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+  background-color: white;
+}
+
+/* Input Fields */
+.companyInput {
+  padding: 10px;
+  width: 80%;
+  font-size: 1.2em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: purple;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+.companyInput::placeholder {
+  color: purple;
+}
+
+/* Button Styling */
+.companyButton {
+  background-color: purple;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button Hover */
+.companyButton:hover {
+  background-color: #6a2c91;
+  transform: translateY(-2px);
+}
+
+/* Links for Certificates */
+.companyLink {
+  color: purple;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1.1em;
+  display: block;
+  margin-top: 5px;
+}
+
+.companyLink:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .companyContainer {
+      width: 90%;
+      padding: 15px;
+  }
+
+  .companyTitle {
+      font-size: 1.5em;
+  }
+
+  .companyInput, .companyButton {
+      width: 100%;
+  }
 }
