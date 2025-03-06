@@ -6,6 +6,7 @@ import College from "./components/College";
 import Company from "./components/Company";
 import OnlinePlatform from "./components/OnlinePlatform";
 import Student from "./components/Student";
+import GrantAccessPage from "./components/GrantAccess";
 import "./App.css";
 
 // Hidden component to connect to MetaMask using Web3.js
@@ -111,6 +112,7 @@ export default function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/college" element={<College />} />
         <Route path="/company" element={<Company />} />
+        <Route path="/grant-access" element={<GrantAccessPage />} />
         <Route path="/platform" element={<OnlinePlatform />} />
         <Route path="/student" element={<Student />} />
       </Routes>

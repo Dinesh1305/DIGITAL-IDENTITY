@@ -8,7 +8,6 @@ const Company = () => {
     const [account, setAccount] = useState(null);
     const [contract, setContract] = useState(null);
     const [studentAddress, setStudentAddress] = useState("");
-    const [certificateHash, setCertificateHash] = useState("");
     const [studentCertificates, setStudentCertificates] = useState([]);
     const [loadingCertificates, setLoadingCertificates] = useState(false);
 
@@ -39,6 +38,7 @@ const Company = () => {
     const requestCertificateAccess = async () => {
         if (!contract) return alert("❌ Contract not connected!");
         if (!account) return alert("❌ Wallet account is not connected!");
+        if (!studentAddress) return alert("❌ Please enter a student address!");
 
         try {
             await contract.methods.requestCertificateAccess(studentAddress).send({ from: account });
@@ -49,14 +49,15 @@ const Company = () => {
         }
     };
 
-    const getStudentCertificates = async () => {
+    const getStudentCertificates = async (studentAddr) => {
         if (!contract) return alert("❌ Contract not connected!");
         if (!account) return alert("❌ Wallet account is not connected!");
+        if (!studentAddr) return alert("❌ Please enter a student address!");
 
         setLoadingCertificates(true);
         try {
             const certificates = await contract.methods
-                .getStudentCertificatesForCompany(studentAddress)
+                .getStudentCertificatesForCompany(studentAddr)
                 .call({ from: account });
 
             setStudentCertificates(certificates);
@@ -72,44 +73,59 @@ const Company = () => {
     };
 
     return (
-        <div className="companyContainer">
-            <h2 className="companyTitle">🏢 Company Panel</h2>
+        <div className="companyMain">
+            <div className="companyContainer">
+                <h2 className="companyTitle">🏢 Company Panel</h2>
 
-            <div className="inputGroup">
-                <h3>📩 Request Certificate Access</h3>
-                <input
-                    type="text"
-                    className="companyInput"
-                    placeholder="Enter Student Address"
-                    value={studentAddress}
-                    onChange={(e) => setStudentAddress(e.target.value)}
-                />
-                <button className="companyButton" onClick={requestCertificateAccess}>Request Access</button>
-            </div>
+                {/* Request Certificate Access */}
+                <div className="inputGroup">
+                    <h3>📩 Request Certificate Access</h3>
+                    <input
+                        type="text"
+                        className="companyInput"
+                        placeholder="Enter Student Address"
+                        value={studentAddress}
+                        onChange={(e) => setStudentAddress(e.target.value)}
+                    />
+                    <button className="companyButton" onClick={requestCertificateAccess}>Request Access</button>
+                </div>
 
-            <div className="inputGroup">
-                <h3>📜 View Student's Certificates</h3>
-                <button className="companyButton" onClick={getStudentCertificates} disabled={loadingCertificates}>
-                    {loadingCertificates ? "Loading..." : "Get Certificates"}
-                </button>
-                <div>
-                    {studentCertificates.length > 0 && (
-                        <div>
-                            <h4>Certificates:</h4>
-                            {studentCertificates.map((certificate, index) => (
-                                <div key={index}>
-                                    <a
-                                        className="companyLink"
-                                        href={`https://gateway.pinata.cloud/ipfs/${certificate}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        View Certificate {index + 1}
-                                    </a>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                {/* View Student's Certificates */}
+                <div className="inputGroup">
+                    <h3>📜 View Student's Certificates</h3>
+                    <input
+                        type="text"
+                        className="companyInput"
+                        placeholder="Enter Student Address"
+                        value={studentAddress}
+                        onChange={(e) => setStudentAddress(e.target.value)}
+                    />
+                    <button 
+                        className="companyButton" 
+                        onClick={() => getStudentCertificates(studentAddress)} 
+                        disabled={loadingCertificates}
+                    >
+                        {loadingCertificates ? "Loading..." : "Get Certificates"}
+                    </button>
+                    <div>
+                        {studentCertificates.length > 0 && (
+                            <div>
+                                <h4>Certificates:</h4>
+                                {studentCertificates.map((certificate, index) => (
+                                    <div key={index}>
+                                        <a
+                                            className="companyLink"
+                                            href={`https://gateway.pinata.cloud/ipfs/${certificate}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            View Certificate {index + 1}
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
