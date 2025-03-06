@@ -11,13 +11,12 @@
   z-index: -1; /* Keeps background behind everything */
 }
 
-/* Ensuring content remains clear and readable */
-.content {
-  position: relative;
-  z-index: 2;
-  padding: 20px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.3);
+/* Global styles */
+body {
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
 }
 
 /* Root container */
@@ -25,7 +24,50 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+/* Container styling */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+/* Title styling */
+h1 {
   text-align: center;
+  font-weight: bold;
+  color: purple;
+  font-size: 2em;
+}
+
+/* Grid layout for cards */
+.cards-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Card styling */
+.card {
+  background-color: white;
+  color: purple;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Logo styling */
@@ -54,19 +96,106 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Ensuring content remains clear and readable */
+.content {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
-/* Card styling */
-.card {
-  padding: 2em;
+/* Admin Container */
+.admin-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f5f5f5;
 }
 
-.read-the-docs {
-  color: #888;
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  color: purple;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Buttons */
+.admin-button {
+  padding: 10px 20px;
+  background-color: purple;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  width: 90%;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.admin-button:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
+}
+
+/* College Container */
+.college-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+}
+
+.college-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: purple;
+  color: white;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Online Section */
+.onlineContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  color: #4a148c;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.onlineCard {
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  margin: 15px;
+  width: 350px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.onlineCard:hover {
+  transform: translateY(-5px);
 }
 
 /* Chatbot Styling */
@@ -79,7 +208,7 @@
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(0px); /* Ensures chatbot remains clear */
+  backdrop-filter: blur(0px);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);

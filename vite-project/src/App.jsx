@@ -8,8 +8,17 @@ import "./App.css";
 // Import Components
 import Admin from "./components/Admin";
 import College from "./components/College";
+import Company from "./components/Company";
 import OnlinePlatform from "./components/OnlinePlatform";
 import Student from "./components/Student";
+
+const entities = [
+  { name: "Admin", image: "/images/admin.png", path: "/admin" },
+  { name: "College", image: "/images/college.png", path: "/college" },
+  { name: "Online Platform", image: "/images/platform.png", path: "/platform" },
+  { name: "Student", image: "/images/student.png", path: "/student" },
+  { name: "Company", image: "/images/company.png", path: "/company" },
+];
 
 function App() {
   const [state, setState] = useState({
@@ -40,7 +49,7 @@ function App() {
           return;
         }
 
-        const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7"; // Update if needed
+        const contractAddress = "0x1923F496cf20567819225728b725d8CF03F151b7";
         const contractABI = abi.abi;
         const contract = new Contract(contractAddress, contractABI, signer);
 
@@ -58,7 +67,6 @@ function App() {
         alert("Failed to connect: " + error.message);
       }
     };
-
     connectWallet();
   }, []);
 
@@ -78,41 +86,48 @@ function App() {
     setInput("");
   };
 
+  function Home() {
+    return (
+      <div className="container" style={{ backgroundColor: "white", minHeight: "100vh", width: "100vw", padding: "20px" }}>
+        <h1 style={{ textAlign: "center", fontWeight: "bold" }}>🔒 Digital Identity Verification System</h1>
+        <p style={{ textAlign: "center" }}>👤 Connected Account: <strong>{state.account?.toString() || "Not connected"}</strong></p>
+        <div className="cards-grid">
+          {entities.map((entity) => (
+            <div className="card" key={entity.name} style={{ backgroundColor: "purple", color: "white", borderRadius: "10px", padding: "20px", textAlign: "center" }}>
+              <img src={entity.image} alt={entity.name} className="card-image" style={{ width: "100px", height: "100px" }} />
+              <h3>{entity.name}</h3>
+              <Link to={entity.path} className="card-button" style={{ backgroundColor: "white", color: "purple", padding: "10px", borderRadius: "5px", textDecoration: "none" }}>{entity.name}</Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Router>
-      <div className="container">
-        <h1>🔐 Digital Identity Verification System</h1>
-        <p>👤 Connected Account: <strong>{state.account?.toString() || "Not connected"}</strong></p>
-        <p>📜 Contract Address: <strong>{state.contract?.target?.toString() || state.contract?.address || "Not connected"}</strong></p>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<Admin contract={state.contract} account={state.account} />} />
+        <Route path="/college" element={<College contract={state.contract} account={state.account} />} />
+        <Route path="/platform" element={<OnlinePlatform contract={state.contract} account={state.account} />} />
+        <Route path="/student" element={<Student contract={state.contract} account={state.account} />} />
+        <Route path="/company" element={<Company contract={state.contract} account={state.account} />} />
+      </Routes>
 
-        <nav className="button-container">
-          <Link to="/admin"><button>👨‍💼 Admin</button></Link>
-          <Link to="/college"><button>🏫 College</button></Link>
-          <Link to="/online-platform"><button>🌐 Online Platform</button></Link>
-          <Link to="/student"><button>🎓 Student</button></Link>
-        </nav>
-
-        <Routes>
-          <Route path="/admin" element={<Admin contract={state.contract} account={state.account} />} />
-          <Route path="/college" element={<College contract={state.contract} account={state.account} />} />
-          <Route path="/online-platform" element={<OnlinePlatform contract={state.contract} account={state.account} />} />
-          <Route path="/student" element={<Student contract={state.contract} account={state.account} />} />
-        </Routes>
-
-        {/* Chatbot UI */}
-        <div className="chat-container">
-          <h2>💬 Chatbot</h2>
-          <div className="chat-box">
-            {messages.map((msg, index) => (
-              <div key={index} className={msg.sender === "User" ? "user-message" : "bot-message"}>
-                <strong>{msg.sender}:</strong> {msg.text}
-              </div>
-            ))}
-          </div>
-          <div className="input-box">
-            <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a message..." />
-            <button onClick={sendMessage}>Send</button>
-          </div>
+      {/* Chatbot UI */}
+      <div className="chat-container">
+        <h2>💬 Chatbot</h2>
+        <div className="chat-box">
+          {messages.map((msg, index) => (
+            <div key={index} className={msg.sender === "User" ? "user-message" : "bot-message"}>
+              <strong>{msg.sender}:</strong> {msg.text}
+            </div>
+          ))}
+        </div>
+        <div className="input-box">
+          <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a message..." />
+          <button onClick={sendMessage}>Send</button>
         </div>
       </div>
     </Router>

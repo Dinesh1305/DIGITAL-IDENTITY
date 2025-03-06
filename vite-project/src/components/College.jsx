@@ -7,21 +7,16 @@ const contractAddress = "0x86ab9f453215774E50FcE92d1fe3e30Bb0B123E9"; // Replace
 
 const College = ({ account }) => {
     const [contract, setContract] = useState(null);
-
-    // Separate states for inputs
     const [studentAddressCollege, setStudentAddressCollege] = useState("");
     const [studentAddressCertificate, setStudentAddressCertificate] = useState("");
     const [collegeAddress, setCollegeAddress] = useState("");
     const [certificateName, setCertificateName] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileHash, setFileHash] = useState("");
-
-    // Separate loading states
     const [loadingStudent, setLoadingStudent] = useState(false);
     const [loadingCertificate, setLoadingCertificate] = useState(false);
     const [loadingFile, setLoadingFile] = useState(false);
 
-    // Load Web3 and Contract
     useEffect(() => {
         const loadBlockchainData = async () => {
             try {
@@ -31,17 +26,14 @@ const College = ({ account }) => {
                 console.log("🟢 Contract Address:", deployedContract.options.address);
             } catch (error) {
                 console.error("🔴 Error loading contract:", error);
+                alert("Failed to load contract. Check the console for details.");
             }
         };
-
         loadBlockchainData();
     }, []);
 
-    // Add Student to College
     const addStudentToCollege = async () => {
         if (!contract) return alert("❌ Contract not connected!");
-        if (!contract.methods?.addStudentToCollege) return alert("❌ Method not found!");
-
         try {
             setLoadingStudent(true);
             await contract.methods.addStudentToCollege(studentAddressCollege, collegeAddress).send({ from: account });
@@ -56,11 +48,8 @@ const College = ({ account }) => {
         }
     };
 
-    // Add College Certificate
     const addCollegeCertificate = async () => {
         if (!contract) return alert("❌ Contract not connected!");
-        if (!contract.methods?.addCollegeCertificate) return alert("❌ Method not found!");
-
         try {
             setLoadingCertificate(true);
             await contract.methods.addCollegeCertificate(certificateName, studentAddressCertificate).send({ from: account });
@@ -75,34 +64,17 @@ const College = ({ account }) => {
         }
     };
 
-    // Upload File to Pinata IPFS
     const uploadToIPFS = async () => {
         if (!selectedFile) return alert("❌ Please select a file first!");
-
         const formData = new FormData();
         formData.append("file", selectedFile);
-
-        const metadata = JSON.stringify({
-            name: selectedFile.name,
-            keyvalues: { owner: account }
-        });
+        const metadata = JSON.stringify({ name: selectedFile.name, keyvalues: { owner: account } });
         formData.append("pinataMetadata", metadata);
-
-        const options = JSON.stringify({
-            cidVersion: 1
-        });
-        formData.append("pinataOptions", options);
-
+        formData.append("pinataOptions", JSON.stringify({ cidVersion: 1 }));
         try {
             setLoadingFile(true);
-
             const API_KEY = "47bd44641506f1853cd9";
             const SECRET_KEY = "ede7f36ff4b7a93b31f7ab139f321472aabf3fe2541d8ab8f8bb3661cb3f7867";
-
-            if (!API_KEY || !SECRET_KEY) {
-                throw new Error("Pinata API keys are missing! Check your .env file.");
-            }
-
             const response = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
                 headers: {
                     pinata_api_key: API_KEY,
@@ -110,7 +82,6 @@ const College = ({ account }) => {
                     "Content-Type": "multipart/form-data"
                 }
             });
-
             const ipfsHash = response.data.IpfsHash;
             setFileHash(ipfsHash);
             alert(`✅ File uploaded successfully! IPFS Hash: ${ipfsHash}`);
@@ -124,73 +95,27 @@ const College = ({ account }) => {
     };
 
     return (
-        <div className="p-4">
-            <h2 className="text-lg font-bold">🏫 College Panel</h2>
-
-            {/* Add Student to College Section */}
-            <div className="input-group">
-                <h3>👨‍🎓 Add Student to College</h3>
-                <input 
-                    type="text" 
-                    id="student-address-college"
-                    placeholder="Student Address" 
-                    value={studentAddressCollege} 
-                    onChange={(e) => setStudentAddressCollege(e.target.value)} 
-                />
-                <input 
-                    type="text" 
-                    id="college-address"
-                    placeholder="College Address" 
-                    value={collegeAddress} 
-                    onChange={(e) => setCollegeAddress(e.target.value)} 
-                />
-                <button 
-                    id="add-student-btn" 
-                    onClick={addStudentToCollege} 
-                    disabled={loadingStudent}
-                >
-                    {loadingStudent ? "Adding..." : "➕ Add Student"}
-                </button>
-            </div>
-
-            {/* Add Certificate for Student Section */}
-            <div className="input-group">
-                <h3>📜 Add Certificate for Student</h3>
-                <input 
-                    type="text" 
-                    id="student-address-certificate"
-                    placeholder="Student Address" 
-                    value={studentAddressCertificate} 
-                    onChange={(e) => setStudentAddressCertificate(e.target.value)} 
-                />
-                <input 
-                    type="text" 
-                    id="certificate-name"
-                    placeholder="Certificate Name" 
-                    value={certificateName} 
-                    onChange={(e) => setCertificateName(e.target.value)} 
-                />
-                <button 
-                    id="add-certificate-btn" 
-                    onClick={addCollegeCertificate} 
-                    disabled={loadingCertificate}
-                >
-                    {loadingCertificate ? "Adding..." : "➕ Add Certificate"}
-                </button>
-            </div>
-
-            {/* Upload File to IPFS */}
-            <div className="input-group">
-                <h3>📤 Upload File to IPFS</h3>
-                <input type="file" id="upload-file" onChange={(e) => setSelectedFile(e.target.files[0])} />
-                <button 
-                    id="upload-file-btn" 
-                    onClick={uploadToIPFS} 
-                    disabled={loadingFile}
-                >
-                    {loadingFile ? "Uploading..." : "📤 Upload File"}
-                </button>
-                {fileHash && <p>📌 IPFS Hash: {fileHash}</p>}
+        <div className="college-wrapper">
+            <div className="college-container">
+                <h2 className="college-title">🏫 College Panel</h2>
+                <div className="college-section">
+                    <h3 className="college-label">👨‍🎓 Add Student to College</h3>
+                    <input type="text" placeholder="Student Address" value={studentAddressCollege} onChange={(e) => setStudentAddressCollege(e.target.value)} className="college-input" />
+                    <input type="text" placeholder="College Address" value={collegeAddress} onChange={(e) => setCollegeAddress(e.target.value)} className="college-input" />
+                    <button onClick={addStudentToCollege} className="college-button" disabled={loadingStudent}>{loadingStudent ? "Adding..." : "➕ Add Student"}</button>
+                </div>
+                <div className="college-section">
+                    <h3 className="college-label">📜 Add Certificate for Student</h3>
+                    <input type="text" placeholder="Student Address" value={studentAddressCertificate} onChange={(e) => setStudentAddressCertificate(e.target.value)} className="college-input" />
+                    <input type="text" placeholder="Certificate Name" value={certificateName} onChange={(e) => setCertificateName(e.target.value)} className="college-input" />
+                    <button onClick={addCollegeCertificate} className="college-button" disabled={loadingCertificate}>{loadingCertificate ? "Adding..." : "➕ Add Certificate"}</button>
+                </div>
+                <div className="college-section">
+                    <h3 className="college-label">📤 Upload File to IPFS</h3>
+                    <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} className="college-input" />
+                    <button onClick={uploadToIPFS} className="college-button" disabled={loadingFile}>{loadingFile ? "Uploading..." : "📤 Upload File"}</button>
+                    {fileHash && <p>📌 IPFS Hash: {fileHash}</p>}
+                </div>
             </div>
         </div>
     );
