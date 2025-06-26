@@ -1,9 +1,29 @@
+/* Background with blur effect */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/uni.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(5px);
+  z-index: -1; /* Keeps background behind everything */
+}
+
 /* Global styles */
 body {
   background-color: white;
   margin: 0;
   padding: 0;
   font-family: "Arial", sans-serif;
+}
+
+/* Root container */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 /* Container styling */
@@ -50,31 +70,42 @@ h1 {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Card image */
-.card img {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
+/* Logo styling */
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
 }
 
-/* Button inside the card */
-.card-button {
-  display: inline-block;
-  background-color: white;
-  color: purple;
-  padding: 10px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  margin-top: 10px;
-  transition: background-color 0.2s ease-in-out;
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
 }
 
-.card-button:hover {
-  background-color: #f3e5f5; /* Light purple shade */
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-/* Wrapper to center the Admin Panel both horizontally and vertically */
+/* Logo rotation animation */
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ensuring content remains clear and readable */
+.content {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Admin Container */
 .admin-wrapper {
   display: flex;
   justify-content: center;
@@ -84,7 +115,6 @@ h1 {
   background-color: #f5f5f5;
 }
 
-/* Admin Container */
 .admin-container {
   display: flex;
   flex-direction: column;
@@ -96,45 +126,6 @@ h1 {
   max-width: 400px;
   width: 100%;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Title */
-.admin-title {
-  font-size: 2em;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-/* Section Layout */
-.admin-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-/* Labels */
-.admin-label {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: purple;
-  background-color: white;
-  padding: 5px;
-  border-radius: 5px;
-}
-
-/* Inputs */
-.admin-input {
-  padding: 10px;
-  border: 2px solid purple;
-  border-radius: 5px;
-  font-size: 1em;
-  color: purple;
-  background-color: white;
-  text-align: center;
-  width: 90%;
 }
 
 /* Buttons */
@@ -156,92 +147,30 @@ h1 {
   transform: scale(1.05);
 }
 
-/* Wrapper to center the College Panel */
+/* College Container */
 .college-wrapper {
   display: flex;
-  justify-content: center;  /* Centers horizontally */
-  align-items: center;      /* Centers vertically */
-  height: 100vh;            /* Full viewport height */
-  width: 100vw;             /* Full viewport width */
-  background-color: white; /* Changed to purple */
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
 }
 
-/* College Container */
 .college-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: purple; /* Background is purple */
+  background-color: purple;
   color: white;
-  border-radius: 10px; /* Rounded corners */
+  border-radius: 10px;
   padding: 30px;
   max-width: 400px;
   width: 100%;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Title */
-.college-title {
-  font-size: 2em;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-/* Section Layout */
-.college-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;  /* Proper gap between labels and buttons */
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-/* Labels */
-.college-label {
-  font-size: 1.2em;
-  font-weight: bold;
-  background-color: white; /* Changed to white */
-  color: purple; /* Text color set to purple for contrast */
-  padding: 5px 10px;
-  border-radius: 5px;
-  width: fit-content;
-}
-
-/* Inputs */
-.college-input {
-  padding: 10px;
-  border: 2px solid white;
-  border-radius: 5px;
-  font-size: 1em;
-  color: purple; /* Text inside input is purple */
-  background-color: white;
-  text-align: center;
-  width: 90%;
-}
-
-.college-input::placeholder {
-  color: purple; /* Placeholder text in purple */
-}
-
-/* Buttons */
-.college-button {
-  padding: 10px 20px;
-  background-color: white;
-  color: purple;
-  border: none;
-  border-radius: 5px;
-  font-size: 1em;
-  font-weight: bold;
-  cursor: pointer;
-  width: 90%;
-  margin-top: 10px; /* Gap between input and button */
-}
-
-.college-button:hover {
-  background-color: lightgray;
-}
-
+/* Online Section */
 .onlineContainer {
   display: flex;
   flex-wrap: wrap;
@@ -269,49 +198,72 @@ h1 {
   transform: translateY(-5px);
 }
 
-.onlineCard h3 {
-  color: #6a1b9a;
-  font-weight: bold;
+/* Chatbot Styling */
+.chat-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(0px);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.onlineCard input {
-  width: 100%;
-  padding: 8px;
-  margin: 8px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: white !important;
-  display: inline-block;
-  padding: 5px 10px;
-  max-width: 200px;
-  border-radius: 5px;
-  color: #6a1b9a;
+.chat-box {
+  padding: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+  text-align: left;
 }
 
-.onlineCard button {
-  background-color: #6a1b9a;
-  color: white;
-  font-weight: bold;
+.user-message, .bot-message {
   padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+}
+
+.user-message {
+  background: rgba(100, 108, 255, 0.8);
+  color: white;
+  align-self: flex-end;
+}
+
+.bot-message {
+  background: rgba(255, 255, 255, 0.7);
+  color: black;
+  align-self: flex-start;
+}
+
+.input-box {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.input-box input {
+  flex-grow: 1;
+  padding: 8px;
   border: none;
   border-radius: 5px;
+  outline: none;
+}
+
+.input-box button {
+  padding: 8px 12px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 5px;
+  background: #646cff;
+  color: white;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  transition: 0.3s ease;
 }
 
-.onlineCard button:hover {
-  background-color: #4a148c;
-}
-
-.onlineCard p {
-  color: #6a1b9a;
-  font-weight: bold;
-}
-.onlineContainer h2 {
-  width: 100%;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #6a1b9a;
-  margin-top: 20px;
+.input-box button:hover {
+  background: #4a5fd4;
 }
