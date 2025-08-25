@@ -1,0 +1,26 @@
+{
+  "name": "open-innovation-project",
+  "version": "1.0.0",
+  "description": "Open Innovation EVM Project",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia"
+  },
+  "dependencies": {
+    "@rainbow-me/rainbowkit": "^1.0.0",
+    "wagmi": "^1.0.0",
+    "viem": "^1.0.0",
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@openzeppelin/contracts": "^4.9.0",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.17.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
